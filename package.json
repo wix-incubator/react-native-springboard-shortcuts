@@ -5,8 +5,10 @@
   "scripts": {
     "android": "react-native run-android",
     "start": "react-native start",
-    "test": "jest",
-    "lint": "eslint ."
+    "test": ":",
+    "lint": "eslint .",
+    "release": "mltci release",
+    "customPublish": "mltci release"
   },
   "dependencies": {
     "react": "16.9.0",
@@ -20,7 +22,8 @@
     "eslint": "^6.8.0",
     "jest": "^24.9.0",
     "metro-react-native-babel-preset": "^0.57.0",
-    "react-test-renderer": "16.9.0"
+    "react-test-renderer": "16.9.0",
+    "wix-mobile-lifecycle-tools": "^2.0.0"
   },
   "jest": {
     "preset": "react-native"
