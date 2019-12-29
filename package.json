@@ -9,6 +9,10 @@
     "release": "mltci release",
     "customPublish": "mltci release"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wix-private/react-native-springboard-shortcuts.git"
+  },
   "publishConfig": {
     "registry": "http://npm.dev.wixpress.com"
   },
