@@ -41,10 +41,10 @@ export default class App extends Component<Props> {
   createShortcut = async () => {
     console.log(`Createing shortcut`);
     if (Platform.OS === "android") {
-      // console.log(RNSpringboardShortcuts);
+
       let shortcut = {
-        id: "someId_7",
-        shortLabel: "Test !",
+        id: "someId_1",
+        shortLabel: "Cool place",
         longLabel: "What a cool place this is!",
         imageUrl: "https://www.smartbonny.com/wp-content/uploads/2019/05/551103-1TOqFD1502285018-540x405.jpg"
       };
