@@ -1,7 +1,6 @@
 {
   "name": "react-native-springboard-shortcuts",
   "version": "1.0.0",
-  "private": true,
   "scripts": {
     "android": "react-native run-android",
     "start": "react-native start",
