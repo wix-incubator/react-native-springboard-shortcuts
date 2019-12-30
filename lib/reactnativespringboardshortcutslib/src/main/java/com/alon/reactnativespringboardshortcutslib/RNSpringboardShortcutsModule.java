@@ -41,8 +41,6 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
     private final String ID_KEY = "id";
     private final String SHORT_LABEL_KEY = "shortLabel";
     private final String LONG_LABEL_KEY = "longLabel";
-//    private final String ICON_FOLDER_KEY = "iconFolderName";
-//    private final String ICON_NAME_KEY = "iconName";
     private final String ACTIVITY_NAME_KEY = "activityName";
     private final String IMAGE_URL = "imageUrl";
 
@@ -54,6 +52,12 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
     @Override
     public String getName() {
         return "RNSpringboardShortcuts";
+    }
+
+    @ReactMethod
+    public void isShortcutServiceAvailable(Callback callback) {
+        Boolean isAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.N_MR1;
+        callback.invoke(isAvailable);
     }
 
     @ReactMethod

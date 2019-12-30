@@ -3,7 +3,7 @@
 buildscript {
     ext {
         buildToolsVersion = "28.0.3"
-        minSdkVersion = 25
+        minSdkVersion = 21
         compileSdkVersion = 28
         targetSdkVersion = 28
         androidXversion = '1.0.0'

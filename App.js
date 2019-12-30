@@ -7,7 +7,7 @@
  */
 
 import React, {Component} from 'react';
-import {NativeModules, StyleSheet, Text, View, Image, Button, Platform} from 'react-native';
+import {NativeModules, StyleSheet, Text, View, Button, Platform} from 'react-native';
 let RNSpringboardShortcuts = NativeModules.RNSpringboardShortcuts;
 
 type Props = {};
