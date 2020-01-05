@@ -2,5 +2,5 @@ rootProject.name = 'ReactNativeSpringboardShortcuts'
 apply from: file("../node_modules/@react-native-community/cli-platform-android/native_modules.gradle"); applyNativeModulesSettingsGradle(settings)
 include ':app'
 
-include ':reactnativespringboardshortcutslib'
-project(':reactnativespringboardshortcutslib').projectDir = new File(rootProject.projectDir, '../lib/reactnativespringboardshortcutslib')
+include ':ReactNativeSpringboardShortcuts'
+project(':ReactNativeSpringboardShortcuts').projectDir = new File(rootProject.projectDir, '../lib/android')
