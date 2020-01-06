@@ -13,6 +13,7 @@ import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.drawable.Icon;
 import android.app.Activity;
+import android.net.Uri;
 import android.os.Build;
 import android.util.Log;
 
@@ -40,8 +41,9 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
     private final String ID_KEY = "id";
     private final String SHORT_LABEL_KEY = "shortLabel";
     private final String LONG_LABEL_KEY = "longLabel";
-    private final String ACTIVITY_NAME_KEY = "activityName";
-    private final String IMAGE_URL = "imageUrl";
+    private final String INTENT_URI_KEY = "intentUri";
+    private final String IMAGE_URL_KEY = "imageUrl";
+
 
     public RNSpringboardShortcutsModule(ReactApplicationContext reactContext) {
         super(reactContext);
@@ -144,22 +146,20 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
             throw new IOException();
         }
 
-        String activityName = DEFAULT_ACTIVITY;
-
-        try {
-            activityName = shortcutDetail.getString(ACTIVITY_NAME_KEY);
-
-        } catch (Exception e) {
-
-        }
-
 
         Activity currentActivity = this.reactContext.getCurrentActivity();
-        Intent intent = new Intent(currentActivity.getApplicationContext(), currentActivity.getClass());
-        intent.putExtra("shortcutId", shortcutDetail.getString(ID_KEY));
-        intent.setAction(Intent.ACTION_VIEW);
+        String intentUri = shortcutDetail.getString(INTENT_URI_KEY);
+        Intent intent;
 
-        String imageUrl = shortcutDetail.getString(IMAGE_URL);
+        if (intentUri != null) {
+            intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intentUri));
+        } else {
+            intent = new Intent(currentActivity.getApplicationContext(), currentActivity.getClass());
+            intent.putExtra("shortcutId", shortcutDetail.getString(ID_KEY));
+            intent.setAction(Intent.ACTION_VIEW);
+        }
+
+        String imageUrl = shortcutDetail.getString(IMAGE_URL_KEY);
         Bitmap bitmap = drawableFromUrl(imageUrl);
 
         ShortcutInfo shortcut = new ShortcutInfo.Builder(currentActivity, shortcutDetail.getString(ID_KEY))
@@ -168,6 +168,7 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
                 .setIcon(Icon.createWithBitmap(bitmap))
                 .setIntent(intent)
                 .build();
+
         return shortcut;
     }
 
