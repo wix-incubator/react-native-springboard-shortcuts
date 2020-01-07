@@ -75,7 +75,7 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        ShortcutManager shortcutManager = getShortCutManager();
+        ShortcutManager shortcutManager = (ShortcutManager)getShortCutManager();
         shortcutManager.removeDynamicShortcuts(Arrays.asList(id));
     }
 
@@ -85,7 +85,7 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
             return;
         }
 
-        ShortcutManager shortcutManager = getShortCutManager();
+        ShortcutManager shortcutManager = (ShortcutManager)getShortCutManager();
         shortcutManager.removeAllDynamicShortcuts();
     }
 
@@ -108,8 +108,8 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
         if (isShortcutExist(shortcutDetails.getString(ID_KEY))) return;
 
         try {
-            ShortcutInfo shortcut = initShortcut(shortcutDetails);
-            ShortcutManager shortcutManager = getShortCutManager();
+            ShortcutInfo shortcut = (ShortcutInfo)initShortcut(shortcutDetails);
+            ShortcutManager shortcutManager = (ShortcutManager)getShortCutManager();
             shortcutManager.addDynamicShortcuts(Arrays.asList(shortcut));
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 shortcutManager.requestPinShortcut(shortcut, null);
@@ -128,8 +128,8 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
         if (isShortcutExist(shortcutDetail.getString(ID_KEY))) {
 
             try {
-                ShortcutInfo shortcut = initShortcut(shortcutDetail);
-                ShortcutManager shortcutManager = getShortCutManager();
+                ShortcutInfo shortcut = (ShortcutInfo)initShortcut(shortcutDetail);
+                ShortcutManager shortcutManager = (ShortcutManager)getShortCutManager();
                 shortcutManager.updateShortcuts(Arrays.asList(shortcut));
             } catch (Exception e) {
                 Log.d("Alon", "Failed to update a shortcut");
@@ -141,7 +141,7 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
     }
 
     @Nullable
-    private ShortcutInfo initShortcut(ReadableMap shortcutDetail) throws IOException {
+    private Object initShortcut(ReadableMap shortcutDetail) throws IOException {
         if (!isServiceAvailable()) {
             throw new IOException();
         }
@@ -177,7 +177,7 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
             return false;
         }
 
-        ShortcutManager shortcutManager = getShortCutManager();
+        ShortcutManager shortcutManager = (ShortcutManager)getShortCutManager();
         List<ShortcutInfo> shortcutInfoList = shortcutManager.getDynamicShortcuts();
         for (ShortcutInfo shortcutInfo : shortcutInfoList) {
             if (shortcutInfo.getId().equals(id)) {
@@ -228,7 +228,7 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
     }
 
     @Nullable
-    private ShortcutManager getShortCutManager() {
+    private Object getShortCutManager() {
         if (!isServiceAvailable()) {
             return null;
         }
