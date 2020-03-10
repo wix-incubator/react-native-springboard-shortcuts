@@ -17,11 +17,9 @@
   "publishConfig": {
     "registry": "http://npm.dev.wixpress.com"
   },
-  "dependencies": {
-    "react": "16.9.0",
-    "react-native": "0.61.5"
-  },
   "devDependencies": {
+    "react": "16.9.0",
+    "react-native": "0.61.5",
     "@babel/core": "^7.7.7",
     "@babel/runtime": "^7.7.7",
     "@react-native-community/eslint-config": "^0.0.5",
