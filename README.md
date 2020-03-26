@@ -2,9 +2,9 @@
   React Native Springboard Shortcuts
 </h1>
 
-React Native Springboard Shortcuts provides an easy way to create shortcuts to an application when developing in react native.
-The shortcuts can deeplink to a specific screen(s) inside your app. 
-This library take advantage of the native side with a simple API for the JavaScript side. At the moment the library support only shortcuts for Android devices, in the future we may add support for IOS as well.
+React Native Springboard Shortcuts provides an easy way to create shortcuts to an application when developing in React Native.
+
+The shortcuts can deeplink to a specific screen(s) inside your app. This library take advantage of the native side with a simple API for the JavaScript side. At the moment the library only supports shortcuts for Android devices, in the future we may add support for iOS as well.
 <br/>
 <br/>
 
@@ -19,7 +19,7 @@ This library take advantage of the native side with a simple API for the JavaScr
 #### Android
 
 1. Open up `android/app/src/main/java/[...]/MainApplication.java`
-  - Add `import com.alon.ReactNativeSpringboardShortcuts.RNSpringboardShortcutsPackage;` to the imports at the top of the file
+  - Add `import com.alon.ReactNativeSpringboardShortcuts.RNSpringboardShortcutsPackage;` to imports at the top of the file
   - Add `new RNSpringboardShortcutsPackage()` to the list returned by the `getPackages()` method
 2. Append the following lines to `android/settings.gradle`:
   	```
@@ -53,7 +53,7 @@ RNSpringboardShortcuts.isShortcutServiceAvailable((isAvailable: boolean) => {
       // Exists
       RNSpringboardShortcuts.updateShortcut(shortcut);
     }).catch((_err: Error) => {
-      // Not exists
+      // Does not exist
       RNSpringboardShortcuts.addShortcut(shortcut);
     });
    }
@@ -77,7 +77,7 @@ RNSpringboardShortcuts.isShortcutServiceAvailable((isAvailable: boolean) => {
 RNSpringboardShortcuts.exists(shortcut.id).then(() => {
   // Exists
 }).catch((_err: Error) => {
-  // Not exists
+  // Does not exist
 });
 ```
 
@@ -102,8 +102,8 @@ RNSpringboardShortcuts.removeAllShortcuts();
 ```
 
 #### handleShortcut
-This function will only work if you did NOT provide an `intentUri` to the shortcut.
-To use this method for handling shortcuts, copy it to `componentDidMount` function of a component/screen which load at the start of your app.
+This function will only work if you **did NOT** provide an `intentUri` to the shortcut.
+To use this method for handling shortcuts, copy it to `componentDidMount` function of a component/screen which loads at the start of your app.
 ```javascript
 RNSpringboardShortcuts.handleShortcut((shortcutId: string) => {
 
@@ -111,4 +111,4 @@ RNSpringboardShortcuts.handleShortcut((shortcutId: string) => {
 ```
 
 <br/>
-So what are you waiting for, now that you know how to use it, start implementing React Native Springboard Shortcuts in your project today!
+So what are you waiting for? Now that you know how to use it, start implementing React Native Springboard Shortcuts in your project today!
