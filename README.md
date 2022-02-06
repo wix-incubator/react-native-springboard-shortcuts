@@ -46,6 +46,7 @@ RNSpringboardShortcuts.isShortcutServiceAvailable((isAvailable: boolean) => {
       shortLabel: 'Shortcut title',
       longLabel: 'Shortcut description',
       imageUrl: 'https://someImage.jpg',
+      defaultImageUrl: 'https://someDefaultImage.jpg',
       intentUri: `myApp://myCoolAppScreen`
     };
 
@@ -83,12 +84,20 @@ RNSpringboardShortcuts.exists(shortcut.id).then(() => {
 
 #### addShortcut
 ```javascript
-RNSpringboardShortcuts.addShortcut(shortcut);
+RNSpringboardShortcuts.addShortcut(shortcut).then(() => {
+  // Succeed
+}).catch((_err: Error) => {
+  // Error
+});
 ```
 
 #### updateShortcut
 ```javascript
-RNSpringboardShortcuts.updateShortcut(shortcut);
+RNSpringboardShortcuts.updateShortcut(shortcut).then(() => {
+  // Succeed
+}).catch((_err: Error) => {
+  // Error
+});
 ```
 
 #### removeShortcut

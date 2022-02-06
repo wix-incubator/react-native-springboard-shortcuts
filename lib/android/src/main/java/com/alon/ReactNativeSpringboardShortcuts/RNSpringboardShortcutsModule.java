@@ -1,5 +1,6 @@
 package com.alon.ReactNativeSpringboardShortcuts;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.ShortcutInfo;
 import android.content.pm.ShortcutManager;
@@ -15,9 +16,7 @@ import android.graphics.drawable.Icon;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Build;
-import android.util.Log;
 
-import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
@@ -37,12 +36,15 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
 
     private final ReactApplicationContext reactContext;
     private final String SHORTCUT_NOT_EXIST = "SHORTCUT_NOT_EXIST";
+    private final String FAILED_TO_UPDATE = "FAILED_TO_UPDATE";
+    private final String FAILED_TO_ADD = "FAILED_TO_ADD";
     private final String DEFAULT_ACTIVITY = "MainActivity";
     private final String ID_KEY = "id";
     private final String SHORT_LABEL_KEY = "shortLabel";
     private final String LONG_LABEL_KEY = "longLabel";
     private final String INTENT_URI_KEY = "intentUri";
     private final String IMAGE_URL_KEY = "imageUrl";
+    private final String DEFAULT_IMAGE_URL_KEY = "defaultImageUrl";
 
 
     public RNSpringboardShortcutsModule(ReactApplicationContext reactContext) {
@@ -100,28 +102,34 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
     }
 
     @ReactMethod
-    public void addShortcut(ReadableMap shortcutDetails) {
-        if (!isServiceAvailable()) {
-            return;
-        }
+    public void addShortcut(ReadableMap shortcutDetails, Promise promise) throws Exception {
+         if (!isServiceAvailable()) {
+             promise.reject(FAILED_TO_ADD, "service is not available");
+             return;
+         }
 
-        if (isShortcutExist(shortcutDetails.getString(ID_KEY))) return;
+         if (isShortcutExist(shortcutDetails.getString(ID_KEY))) {
+             promise.reject(FAILED_TO_ADD, "shortcut is already exist");
+             return;
+         };
 
-        try {
-            ShortcutInfo shortcut = (ShortcutInfo)initShortcut(shortcutDetails);
-            ShortcutManager shortcutManager = (ShortcutManager)getShortCutManager();
-            shortcutManager.addDynamicShortcuts(Arrays.asList(shortcut));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                shortcutManager.requestPinShortcut(shortcut, null);
-            }
-        } catch (Exception e) {
-            Log.d("Alon", "Failed to add a shortcut");
-        }
+         try {
+             ShortcutInfo shortcut = (ShortcutInfo)initShortcut(shortcutDetails);
+             ShortcutManager shortcutManager = (ShortcutManager)getShortCutManager();
+             shortcutManager.addDynamicShortcuts(Arrays.asList(shortcut));
+             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                 shortcutManager.requestPinShortcut(shortcut, null);
+             }
+             promise.resolve(null);
+         } catch (Exception e) {
+             promise.reject(FAILED_TO_ADD, e);
+         }
     }
 
     @ReactMethod
-    public void updateShortcut(ReadableMap shortcutDetail) {
+    public void updateShortcut(ReadableMap shortcutDetail, Promise promise) {
         if (!isServiceAvailable()) {
+            promise.reject(FAILED_TO_UPDATE, "service is not available");
             return;
         }
 
@@ -131,36 +139,43 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
                 ShortcutInfo shortcut = (ShortcutInfo)initShortcut(shortcutDetail);
                 ShortcutManager shortcutManager = (ShortcutManager)getShortCutManager();
                 shortcutManager.updateShortcuts(Arrays.asList(shortcut));
+                promise.resolve(null);
             } catch (Exception e) {
-                Log.d("Alon", "Failed to update a shortcut");
+                promise.reject(FAILED_TO_UPDATE, e);
             }
 
         } else {
-            return;
+            promise.reject(FAILED_TO_UPDATE, "shortcut is not exist");
         }
     }
 
     @Nullable
-    private Object initShortcut(ReadableMap shortcutDetail) throws IOException {
+    private Object initShortcut(ReadableMap shortcutDetail) throws Exception {
         if (!isServiceAvailable()) {
-            throw new IOException();
+            throw new Exception("Init shortcut: Service is not available");
         }
 
-
         Activity currentActivity = this.reactContext.getCurrentActivity();
+        Context currentContext = currentActivity.getApplicationContext();
         String intentUri = shortcutDetail.getString(INTENT_URI_KEY);
         Intent intent;
 
         if (intentUri != null) {
             intent = new Intent(Intent.ACTION_VIEW, Uri.parse(intentUri));
         } else {
-            intent = new Intent(currentActivity.getApplicationContext(), currentActivity.getClass());
+            intent = new Intent(currentContext, currentActivity.getClass());
             intent.putExtra("shortcutId", shortcutDetail.getString(ID_KEY));
             intent.setAction(Intent.ACTION_VIEW);
         }
 
-        String imageUrl = shortcutDetail.getString(IMAGE_URL_KEY);
-        Bitmap bitmap = drawableFromUrl(imageUrl);
+        Bitmap bitmap;
+        try {
+            String imageUrl = shortcutDetail.getString(IMAGE_URL_KEY);
+            bitmap = drawableFromUrl(imageUrl);
+        } catch (Exception e) {
+            String imageUrl = shortcutDetail.getString(DEFAULT_IMAGE_URL_KEY);
+            bitmap = drawableFromUrl(imageUrl);
+        }
 
         ShortcutInfo shortcut = new ShortcutInfo.Builder(currentActivity, shortcutDetail.getString(ID_KEY))
                 .setShortLabel(shortcutDetail.getString(SHORT_LABEL_KEY))
@@ -187,7 +202,11 @@ public class RNSpringboardShortcutsModule extends ReactContextBaseJavaModule {
         return false;
     }
 
-    private Bitmap drawableFromUrl(String url) throws IOException {
+    private Bitmap drawableFromUrl(String url) throws Exception {
+        if(url == null) {
+            throw new Exception("No url to draw an icon");
+        }
+
         Bitmap bitmap;
         HttpURLConnection connection = (HttpURLConnection) new URL(url).openConnection();
         connection.setRequestProperty("User-agent","Mozilla/4.0");
